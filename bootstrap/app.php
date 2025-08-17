@@ -13,8 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->validateCsrfTokens(except: [
             '/payment/*', // Exclude a specific route
-            //'stripe/*',              // Exclude all routes under 'stripe/'
-            //'http://example.com/some/path', // Exclude a full URL
+            // 'stripe/*',              // Exclude all routes under 'stripe/'
+            // 'http://example.com/some/path', // Exclude a full URL
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

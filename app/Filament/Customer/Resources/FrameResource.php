@@ -3,7 +3,6 @@
 namespace App\Filament\Customer\Resources;
 
 use App\Filament\Customer\Resources\FrameResource\Pages;
-use App\Filament\Customer\Resources\FrameResource\RelationManagers;
 use App\Models\Frame;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -11,7 +10,6 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Validation\Rule;
 
 class FrameResource extends Resource
@@ -19,6 +17,8 @@ class FrameResource extends Resource
     protected static ?string $model = Frame::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Image cards';
 
     public static function form(Form $form): Form
     {
@@ -66,12 +66,12 @@ class FrameResource extends Resource
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\EditAction::make()->disabled(fn(Frame $frame) => empty($frame->user_id)),
+                Tables\Actions\DeleteAction::make()->disabled(fn(Frame $frame) => empty($frame->user_id)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    //Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
     }
@@ -83,11 +83,14 @@ class FrameResource extends Resource
         ];
     }
 
-    /*
+    
     public static function getEloquentQuery() : Builder
     {
-        return parent::getEloquentQuery()->where('user_id', auth()->user()?->id)->orWhereNull('is_user');
+        return parent::getEloquentQuery()->where(function ($query) {
+            $query->where('user_id', auth()->id())
+                  ->orWhereNull('user_id');
+        });
     }
-        
-    */
+
+    
 }

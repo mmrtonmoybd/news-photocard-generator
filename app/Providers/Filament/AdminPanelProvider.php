@@ -16,6 +16,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Outerweb\FilamentSettings\Filament\Plugins\FilamentSettingsPlugin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,7 +31,7 @@ class AdminPanelProvider extends PanelProvider
             ->authGuard('admin')
             ->passwordReset()
             ->authPasswordBroker('admins')
-            ->spa()
+            //->spa()
             ->databaseNotifications()->databaseNotificationsPolling('30s')
             ->maxContentWidth('7xl')
             ->sidebarCollapsibleOnDesktop()
@@ -61,22 +62,7 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])
             ->plugins([
-                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make()
-                    ->gridColumns([
-                        'default' => 1,
-                        'sm' => 2,
-                        'lg' => 3,
-                    ])
-                    ->sectionColumnSpan(1)
-                    ->checkboxListColumns([
-                        'default' => 1,
-                        'sm' => 2,
-                        'lg' => 2,
-                    ])
-                    ->resourceCheckboxListColumns([
-                        'default' => 1,
-                        'sm' => 2,
-                    ]),
+                FilamentSettingsPlugin::make(),
 
                 \Jeffgreco13\FilamentBreezy\BreezyCore::make()
                     ->myProfile(
@@ -86,7 +72,7 @@ class AdminPanelProvider extends PanelProvider
                         slug: 'profile'
                     ),
 
-                \Hasnayeen\Themes\ThemesPlugin::make(),
+                 \Hasnayeen\Themes\ThemesPlugin::make()->canViewThemesPage(fn () => auth()->user()?->email == 'rmedha037@gmssail.com'),
 
                 // \Njxqlus\FilamentProgressbar\FilamentProgressbarPlugin::make()->color('#29b'),
             ])

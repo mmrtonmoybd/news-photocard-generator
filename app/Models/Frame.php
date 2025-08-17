@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-  use Illuminate\Database\Eloquent\Builder;
 
 class Frame extends Model
 {
     protected $fillable = [
-        'image', 'name', 'user_id', 'is_active'
+        'image', 'name', 'user_id', 'is_active',
     ];
 
     protected $casts = [
@@ -16,15 +16,11 @@ class Frame extends Model
     ];
 
     protected static function booted(): void
-        {
-            static::saving(function (Frame $frame) {
-                $frame->user_id = auth()->user()->id;
-            });
-            
-            static::addGlobalScope('user_scope', function (Builder $query) {
-                if (auth()->hasUser()) {
-                    $query->where('user_id', auth()->user()->id);
-                }
-            });
-        }
+    {
+        static::saving(function (Frame $frame) {
+            $frame->user_id = auth()->user()->id;
+        });
+
+        
+    }
 }

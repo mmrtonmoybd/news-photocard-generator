@@ -3,9 +3,9 @@
 namespace App\Filament\Customer\Resources\CardResource\Pages;
 
 use App\Filament\Customer\Resources\CardResource;
+use App\Models\Card;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use App\Models\Card;
 
 class EditCard extends EditRecord
 {

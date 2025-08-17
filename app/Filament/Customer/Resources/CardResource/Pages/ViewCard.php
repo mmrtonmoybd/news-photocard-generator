@@ -3,9 +3,9 @@
 namespace App\Filament\Customer\Resources\CardResource\Pages;
 
 use App\Filament\Customer\Resources\CardResource;
+use App\Models\Card;
 use Filament\Actions;
 use Filament\Resources\Pages\ViewRecord;
-use App\Models\Card;
 
 class ViewCard extends ViewRecord
 {

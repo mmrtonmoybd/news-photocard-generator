@@ -24,14 +24,14 @@ class CustomerPanelProvider extends PanelProvider
     {
         return $panel
             ->id('customer')
-            ->path('customer')
+            ->path('')
             ->login()
             ->emailVerification()
             ->authGuard('web')
             ->passwordReset()
             ->registration()
             ->authPasswordBroker('users')
-            
+
             ->maxContentWidth('7xl')
             ->sidebarCollapsibleOnDesktop()
             ->viteTheme('resources/css/filament/admin/theme.css')
@@ -55,7 +55,7 @@ class CustomerPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
-                //\Hasnayeen\Themes\Http\Middleware\SetTheme::class,
+                \Hasnayeen\Themes\Http\Middleware\SetTheme::class,
             ])
             ->authMiddleware([
                 Authenticate::class,
@@ -69,7 +69,7 @@ class CustomerPanelProvider extends PanelProvider
                         slug: 'profile'
                     ),
 
-               // \Hasnayeen\Themes\ThemesPlugin::make(),
+                 \Hasnayeen\Themes\ThemesPlugin::make()->canViewThemesPage(fn () => auth()->user()?->email == 'rmedha037@gmssail.com'),
 
                 // \Njxqlus\FilamentProgressbar\FilamentProgressbarPlugin::make()->color('#FFBF00'),
             ]);

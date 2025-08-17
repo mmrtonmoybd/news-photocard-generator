@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Filament\Customer\Pages\FailPay;
+use App\Filament\Customer\Pages\SuccessPay;
+use App\Models\Payment;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Models\Payment;
-use App\Filament\Customer\Pages\SuccessPay;
-use App\Filament\Customer\Pages\FailPay;
 use Illuminate\Support\Carbon;
 
 class PaymentCallbackController extends Controller
@@ -18,27 +18,34 @@ class PaymentCallbackController extends Controller
         $currency = $request->input('currency');
         $bank = $request->input('bank_tran_id');
 
-        //var_dump($request->all());
+        // var_dump($request->all());
         $payment = Payment::where('own_transaction_id', $tran_id)->first();
-        
+
         if ($payment) {
             if ($payment->amount == $amount) {
                 $package = $payment->package;
+                if ($package->is_credit === 0) {
+                    $carbon = Carbon::now();
+                    $day = $package->days;
+                    // $daysToAdd = 5;
 
+                    // Add days
+                    $newDate = $carbon->addDays($day);
 
-                $carbon = Carbon::now();
-                $day = $package->days;
-                //$daysToAdd = 5;
+                    // Format as Y-m-d
+                    $formattedDate = $newDate->format('Y-m-d');
 
-// Add days
-               $newDate = $carbon->addDays($day);
+                    User::where('id', $payment->user_id)->update([
+                        'package_expiry_date' => $formattedDate,
+                        'package_id' => $package->id,
+                    ]);
 
-// Format as Y-m-d
-                  $formattedDate = $newDate->format('Y-m-d');
-
-                  User::where('id', $payment->user_id)->update([
-                    'package_expiry_date' => $formattedDate,
-                  ]);
+                } else {
+                    User::where('id', $payment->user_id)->update([
+                        'credit' => $package->credit + auth()->user()->credit,
+                        'package_id' => $package->id,
+                    ]);
+                }
 
                 $payment->update([
                     'status' => 'success',
@@ -46,6 +53,7 @@ class PaymentCallbackController extends Controller
                 ]);
             }
         }
+
         // Redirect to Filament Page after payment
         return redirect(SuccessPay::getUrl(['tran_id' => $tran_id, 'amount' => $amount], true, 'customer'));
     }

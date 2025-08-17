@@ -17,6 +17,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerifyEmail
 {
     use HasFactory, HasRoles, Notifiable;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -26,6 +27,8 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         'name',
         'email',
         'password',
+        'avatar_url',
+        'is_active',
     ];
 
     /**
@@ -48,9 +51,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
-    
+
     public function getFilamentAvatarUrl(): ?string
     {
         if ($this->avatar_url) {
@@ -61,9 +65,13 @@ class User extends Authenticatable implements FilamentUser, HasAvatar, MustVerif
             return 'https://www.gravatar.com/avatar/'.$hash.'?d=mp&r=g&s=250';
         }
     }
-    
-       public function canAccessPanel(Panel $panel): bool
+
+    public function canAccessPanel(Panel $panel): bool
     {
-        return true;
+        return $this->is_active === true;
+    }
+
+    public function package() {
+        return $this->belongsTo(Package::class);
     }
 }

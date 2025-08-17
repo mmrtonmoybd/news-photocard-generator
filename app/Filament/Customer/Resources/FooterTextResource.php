@@ -3,21 +3,20 @@
 namespace App\Filament\Customer\Resources;
 
 use App\Filament\Customer\Resources\FooterTextResource\Pages;
-use App\Filament\Customer\Resources\FooterTextResource\RelationManagers;
 use App\Models\FooterText;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class FooterTextResource extends Resource
 {
     protected static ?string $model = FooterText::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?string $navigationGroup = 'Image cards';
 
     public static function form(Form $form): Form
     {

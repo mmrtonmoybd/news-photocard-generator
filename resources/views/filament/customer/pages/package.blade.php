@@ -13,9 +13,7 @@
                         </div>
 
                         {{-- Package Type --}}
-                        <div class="text-sm font-medium text-gray-600">
-                            {{ $package->is_credit ? 'Credit Package' : 'Day Package' }}
-                        </div>
+                    
 
                         {{-- Days or Credit Value --}}
                         <!--
@@ -24,7 +22,7 @@
                         </div>
 -->
                         <div class="text-xl font-bold text-indigo-600 mt-1">
-                            {{ $package->days . ' Days' }}
+                            {{ $package->is_credit ? $package->credit . ' Credit' : $package->days . ' Days' }}
                         </div>
 
                         {{-- Amount --}}
