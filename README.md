@@ -1,66 +1,80 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# News Photocard Generator
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A web app for creating news photocards: branded, share-ready images that combine a news photo, headline, date, logo, and footer text inside a frame. It supports Bangla text and dates, and paid packages through SSLCommerz.
 
-## About Laravel
+Built with Laravel 11 and Filament 3.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Customer panel (`/`)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Sign up and log in
+- **Create photocards:** pick a frame, add a headline with its own colour, and upload a news photo with an optional border colour
+- Optional date in English or Bangla (Bangla calendar), with its own colour
+- Optional logo and footer text, saved for reuse
+- Upload your own **frames**, **logos**, and **footer texts**
+- Download cards as PNG, JPG, JPEG, or WEBP
+- Shareable link for each card (`/social/share/{hash}`)
+- **Packages:** buy a time-based subscription or a pack of download credits, paid through SSLCommerz
+- Transaction history
 
-## Learning Laravel
+### Admin panel (`/admin`)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- Manage customers and admins
+- Create **packages**: credit-based or a number of days, with a price
+- View all transactions
+- **Settings** for brand name, logo, and SSLCommerz credentials (store ID, password, sandbox mode)
+- Roles and permissions (Filament Shield), profile management (Filament Breezy), activity log, and themes
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Tech stack
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+| Layer    | Packages                                                 |
+| -------- | -------------------------------------------------------- |
+| Backend  | PHP 8.2+, Laravel 11                                     |
+| Admin UI | Filament 3, Filament Shield, Filament Breezy             |
+| Images   | Spatie Image, Intervention Image                         |
+| Payments | SSLCommerz                                               |
+| Fonts    | Noto Sans Bengali, SolaimanLipi (Bangla text on images)  |
 
-## Laravel Sponsors
+## Getting started
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Requirements
 
-### Premium Partners
+- PHP 8.2+ with the GD or Imagick extension
+- Composer
+- Node.js and npm
+- MySQL or another database supported by Laravel
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Installation
 
-## Contributing
+```bash
+git clone https://github.com/mmrtonmoybd/news-photocard-generator.git
+cd news-photocard-generator
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+composer install
+cp .env.example .env
+php artisan key:generate
+# set the DB_* values in .env
+php artisan migrate --seed
+php artisan storage:link
+npm install && npm run build
+```
 
-## Code of Conduct
+The seeder creates a super admin, `superadmin@example.com`, with password `superadmin`. Change it right away.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Then sign in at `/admin`:
 
-## Security Vulnerabilities
+1. Under **Settings**, set the brand name and logo, and add your SSLCommerz store ID and password. Turn on sandbox mode while testing.
+2. Under **Packages**, create at least one package customers can buy.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Run locally
 
-## License
+```bash
+php artisan serve
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+The customer panel is at `http://localhost:8000` and the admin panel at `http://localhost:8000/admin`.
+
+## Author
+
+Moshiur Rahman — [rmedha037@gmail.com](mailto:rmedha037@gmail.com)
